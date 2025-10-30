@@ -5,12 +5,12 @@
 // Siga os comentários para implementar cada parte do desafio.
 
 
-    // ---------- Início do desafio Tema 5: Aventureiro ---------- //
+     // ---------- Início do desafio Tema 5: Mestre ---------- //
     
     char linha[10] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'}; // Letras para as colunas do tabuleiro
     int tabuleiro[10][10];
     
-    // Variável para verificar se é possível adicionar os navios no tabuleiro:
+    // Variável para verificar se é possível adicionar os navios e habilidades no tabuleiro:
     
     int podePosicionar = 0; // (0: Não ; 1 = Sim)
     
@@ -19,6 +19,12 @@
     int navioHorizontalPosicionado = 0; 
     int navioVerticalPosicionado = 0;
     int navioDiagonalPosicionado = 0;
+    
+    // Variáveis para dizer se as habilidades estão no tabuleiro (0: Não ; 1 = Sim):
+    
+    int conePosicionado = 0;
+    int cruzPosicionada = 0;
+    int octaedroPosicionado = 0;
     
     // Iniciando o tabuleiro (valores iniciais = 0)
     
@@ -101,6 +107,99 @@
         
     }
     
+    // Função que cria a habilidade cone
+    
+    void cone(int linha, int coluna) {
+        podePosicionar = 1;
+        
+        for(int i = 0; i < 3; i++) { 
+            if(linha + 2 >= 10 || coluna + 4 >= 10) { // Verifica se a habilidade pode ser colocada no tabuleiro
+                podePosicionar = 0;
+                break; // interrompe imediatamente a execução do loop
+            }
+            
+            if(podePosicionar == 1) {
+                for(int i = 0; i < 3; i++) { // 3 linhas do cone
+                    for(int j = 0; j < 5; j++) { // 5 Colunas do cone
+                        if (j >= 2 - i && j <= 2 + i) {
+                            if (tabuleiro[linha + i][coluna + j] == 3) { 
+                                tabuleiro[linha + i][coluna + j] = 5; // Se tem navio == 3, vira 5 (Acertou o navio)
+                            } else if (tabuleiro[linha + i][coluna + j] == 0) { // Se não tem navio, marca como 1 (Acertou a água)
+                                tabuleiro[linha + i][coluna + j] = 1;
+                            }
+                        }
+                    }
+                }
+            
+                conePosicionado = 1;
+            } else {
+                conePosicionado = 0;
+            }
+        }
+    }
+    
+    // Função que cria a habilidade cruz
+    
+    void cruz(int linha, int coluna) {
+        podePosicionar = 1;
+        
+        for(int i = 0; i < 3; i++) { 
+            if(linha + 2 >= 10 || coluna + 4 >= 10) { // Verifica se a habilidade pode ser colocada no tabuleiro
+                podePosicionar = 0;
+                break; // interrompe imediatamente a execução do loop
+            }
+        }
+            
+        if(podePosicionar == 1) {
+            for(int i = 0; i < 3; i++) { // 3 linhas da cruz
+                for(int j = 0; j < 5; j++) { // 5 Colunas do cone
+                    if (i == 1 || j == 2) { // Centro da cruz
+                        if (tabuleiro[linha + i][coluna + j] == 3) {
+                            tabuleiro[linha + i][coluna + j] = 5; // Se tem navio == 3, vira 5 (Acertou o navio)
+                        } else if (tabuleiro[linha + i][coluna + j] == 0) {
+                            tabuleiro[linha + i][coluna + j] = 1; // Se não tem navio, marca como 1 (Acertou a água)
+                        }
+                    }
+                }
+            }
+                
+            cruzPosicionada = 1;
+        } else {
+            cruzPosicionada = 0;
+        }   
+    }
+    
+    // Função que cria a habilidade octaedro
+    
+    void octaedro(int linha, int coluna) {
+        podePosicionar = 1;
+        
+        for(int i = 0; i < 3; i++) { 
+            if(linha + 2 >= 10 || coluna + 2 >= 10) { // Verifica se a habilidade pode ser colocada no tabuleiro
+                podePosicionar = 0;
+                break; // interrompe imediatamente a execução do loop
+            }
+        }
+            
+        if(podePosicionar == 1) {
+            for(int i = 0; i < 3; i++) { // 3 linhas
+                for(int j = 0; j < 3; j++) { // 3 colunas
+                    if (i == 1 || j == 1) { // Centro
+                        if (tabuleiro[linha + i][coluna + j] == 3) {
+                            tabuleiro[linha + i][coluna + j] = 5; // Se tem navio == 3, vira 5 (Acertou o navio)
+                        } else if (tabuleiro[linha + i][coluna + j] == 0) {
+                            tabuleiro[linha + i][coluna + j] = 1; // Se não tem navio, marca como 1 (Acertou a água)
+                        }
+                    }
+                }
+            }
+                
+            octaedroPosicionado = 1;
+        } else {
+            octaedroPosicionado = 0;
+        }   
+    }
+    
     // Exibir tabuleiro atualizado
     
     void exibirTabuleiroFinal() {
@@ -137,19 +236,24 @@ int main()
     inicioTabuleiro();
     
     // Posiciona os navios no tabuleiro:
-    
+   
     posicionarNavioHorizontal(0,7);
-    posicionarNavioVertical(7,4);
-    posicionarNavioDiagonal(1,2);
+    posicionarNavioVertical(5,3);
+    posicionarNavioDiagonal(0,1);
     posicionarNavioDiagonal(7,7);
     
+    // Habilidades no tabuleiro
+    
+    cone(5,0);
+    cruz(0,5);
+    octaedro(6,6);
     
     // Exibir tabuleiro se as posições dos navios estiverem corretas:
     
-    if(navioHorizontalPosicionado == 1 && navioVerticalPosicionado == 1 && navioDiagonalPosicionado == 1) {
+    if(navioHorizontalPosicionado == 1 && navioVerticalPosicionado == 1 && navioDiagonalPosicionado == 1 && conePosicionado == 1 && cruzPosicionada == 1 && octaedroPosicionado == 1) {
         exibirTabuleiroFinal();
     } else {
-        printf("Não é possível adicionar os navios no tabuleiro. Verifique suas coordenadas!");
+        printf("Não é possível adicionar os navios ou habilidades no tabuleiro. Verifique suas coordenadas!");
     }
     
     return 0;
