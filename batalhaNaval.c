@@ -4,37 +4,122 @@
 // Este código inicial serve como base para o desenvolvimento do sistema de Batalha Naval.
 // Siga os comentários para implementar cada parte do desafio.
 
-int main() {
-    // Nível Novato - Posicionamento dos Navios
-    // Sugestão: Declare uma matriz bidimensional para representar o tabuleiro (Ex: int tabuleiro[5][5];).
-    // Sugestão: Posicione dois navios no tabuleiro, um verticalmente e outro horizontalmente.
-    // Sugestão: Utilize `printf` para exibir as coordenadas de cada parte dos navios.
-
-    // Nível Aventureiro - Expansão do Tabuleiro e Posicionamento Diagonal
-    // Sugestão: Expanda o tabuleiro para uma matriz 10x10.
-    // Sugestão: Posicione quatro navios no tabuleiro, incluindo dois na diagonal.
-    // Sugestão: Exiba o tabuleiro completo no console, mostrando 0 para posições vazias e 3 para posições ocupadas.
-
-    // Nível Mestre - Habilidades Especiais com Matrizes
-    // Sugestão: Crie matrizes para representar habilidades especiais como cone, cruz, e octaedro.
-    // Sugestão: Utilize estruturas de repetição aninhadas para preencher as áreas afetadas por essas habilidades no tabuleiro.
-    // Sugestão: Exiba o tabuleiro com as áreas afetadas, utilizando 0 para áreas não afetadas e 1 para áreas atingidas.
-
-    // Exemplos de exibição das habilidades:
-    // Exemplo para habilidade em cone:
-    // 0 0 1 0 0
-    // 0 1 1 1 0
-    // 1 1 1 1 1
+    // ---------- Início do desafio Tema 5: Novato ---------- //
     
-    // Exemplo para habilidade em octaedro:
-    // 0 0 1 0 0
-    // 0 1 1 1 0
-    // 0 0 1 0 0
+    char linha[10] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'}; // Letras para as colunas do tabuleiro
+    int tabuleiro[10][10];
+    
+    // Variável para verificar se é possível adicionar os navios no tabuleiro:
+    
+    int podePosicionar = 0; // (0: Não ; 1 = Sim)
+    
+    // Variáveis para dizer se o navio está no tabuleiro (0: Não ; 1 = Sim):
+    
+    int navio1Posicionado = 0; 
+    int navio2Posicionado = 0;
+    
+    // Iniciando o tabuleiro (valores iniciais = 0)
+    
+    void inicioTabuleiro() {
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++) {            
+                tabuleiro[i + 1][j + 1] = 0;  
+            }
+        }
+    }
+    
+    // Função que posiciona o navio na horizontal:
+    
+    void posicionarNavioHorizontal(int linha, int coluna) {
+        podePosicionar = 1; // Começamos atribuindo verdadeiro e vamos testar para ver se o navio pode realmente ser posicionado
+        
+        for(int i = 0; i < 3; i++) {
+            if(coluna >= 8 || tabuleiro[linha][coluna + i] == 3) { // Verifica se o navio pode ser colocado na horizontal (Se coluna > 8 então não terá espaço) e se o navio não sobrepõe outro navio já posto no tabuleiro
+                podePosicionar = 0; 
+                break; // interrompe imediatamente a execução do loop
+            }
+        }
+        
+        if(podePosicionar == 1) {
+            for(int i = 0; i < 3; i++) {
+                tabuleiro[linha][coluna + i] = 3; // Substitui o valor do elemento do tabuleiro por 3 para marcar como posição ocupada pelo navio (coluna + i pois muda na horizontal)
+            }
+            
+            navio1Posicionado = 1;
+        }
+    }
+    
+    // Função que posiciona o navio na vertical:
+    
+    void posicionarNavioVertical(int linha, int coluna) {
+        podePosicionar = 1; // Começamos atribuindo verdadeiro e vamos testar para ver se o navio pode realmente ser posicionado
+        
+        for(int i = 0; i < 3; i++) {
+            if(linha >= 8 || tabuleiro[linha + i][coluna] == 3) { // Verifica se o navio pode ser colocado na vertical (Se linha > 8 então não terá espaço) e se o navio não sobrepõe outro navio já posto no tabuleiro
+                podePosicionar = 0; 
+                break; // interrompe imediatamente a execução do loop
+            }
+        }
+        
+        if(podePosicionar == 1) {
+            for(int i = 0; i < 3; i++) {
+                tabuleiro[linha + i][coluna] = 3; // Substitui o valor do elemento do tabuleiro por 3 para marcar como posição ocupada pelo navio (linha + i pois muda na vertical)
+            }
+            
+            navio2Posicionado = 1;
+        }
+    }
+    
+    // Exibir tabuleiro atualizado
+    
+    void exibirTabuleiroFinal() {
+        printf ("----- TABULEIRO BATALHA NAVAL -----\n\n");
+        printf("    "); 
+        
+        for (int i = 0; i < 10; i++)
+        {            
+            printf("%c ", linha[i]); // Imprime as letras das colunas
+        }  
+        
+        printf("\n");  
+        
+        for (int i = 0; i < 10; i++)
+        {   
+            printf("\n");
+            printf(" %2d ", i + 1); // Imprime a coluna 0 da tabela contendo os números de 1 a 10
+            
+            // Imprime o tabuleiro:
+            
+            for (int j = 0; j < 10; j++)
+            {
+                printf("%d ", tabuleiro[i][j]); 
+            }
+            
+        }
+    } 
+    
+    
+    
 
-    // Exemplo para habilidade em cruz:
-    // 0 0 1 0 0
-    // 1 1 1 1 1
-    // 0 0 1 0 0
-
+int main()
+{
+    inicioTabuleiro();
+    
+    // Posiciona os navios no tabuleiro:
+    
+    posicionarNavioHorizontal(0,7);
+    posicionarNavioVertical(7,4);
+    
+    
+    // Exibir tabuleiro se as posições dos navios estiverem corretas:
+    
+    if(navio1Posicionado == 1 && navio2Posicionado == 1) {
+        exibirTabuleiroFinal();
+    } else {
+        printf("Não é possível adicionar os navios no tabuleiro. Verifique suas coordenadas!");
+    }
+    
     return 0;
 }
+
